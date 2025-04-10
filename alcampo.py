@@ -24,7 +24,7 @@ def main():
 
         # Buscar los productos, imágenes, precios y nombres
         id_productos = soup.find_all("div", attrs={'data-productid': True})
-        url_productos = soup.find_all('a', href=True)
+        url_productos = soup.find_all('link', {'itemprop': 'url'})
         nombres_productos = soup.find_all("p", class_="product_preview-desc")
         precios_productos = soup.find_all("span", class_="price")
         image_tags = soup.find_all('meta', {'itemprop': 'image'})
