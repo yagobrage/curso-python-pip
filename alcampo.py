@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-
+import re
 
 def main():
     print('Hola')
@@ -37,7 +37,14 @@ def main():
             csv_writer = csv.DictWriter(file, fieldnames=('Producto', 'Precio'))
             csv_writer.writeheader()
             for nombre, precio in productos.items():
-                csv_writer.writerow({'Producto': nombre, 'Precio': precio})
+                            # Limpiar precio y extraer solo los números
+                            precio_numeros = re.findall(r'\d+\.\d+|\d+', precio)  # Encuentra números con decimales o sin ellos
+                            if precio_numeros:
+                                precio_formateado = float(precio_numeros[0])  # Usamos float por si hay decimales
+                                csv_writer.writerow({'Producto': nombre, 'Precio': precio_formateado})
+                            else:
+                                csv_writer.writerow({'Producto': nombre, 'Precio': 'N/A'})  # Si no se encuentra un precio válido
+
 
     else:
         print("Error al acceder a la página:", response.status_code)
