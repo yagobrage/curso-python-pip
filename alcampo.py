@@ -55,16 +55,16 @@ def main():
                 precio_formateado = 'N/A'
 
             productos.append({
+                'ID': producto_id,
                 'Producto': nombre,
                 'Precio': precio_formateado,
                 'Imagen': imagen,
-                'ID': producto_id,
                 'URL': producto_url
             })
 
         # Escribir los productos en un archivo CSV
         with open('productos.csv', mode='w', newline='', encoding='utf-8') as file:
-            fieldnames = ['Producto', 'Precio', 'Imagen', 'ID', 'URL']
+            fieldnames = ['ID','Producto', 'Precio', 'Imagen', 'URL']
             csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
             csv_writer.writeheader()
 
