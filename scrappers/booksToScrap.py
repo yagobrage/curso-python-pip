@@ -28,7 +28,8 @@ if respuesta.status_code == 200:
 
         # Sacar imagenes y URLs de las imágenes
         imagen = contenedor.find('img').get('src')
-        lista_imagenes.append(imagen)
+        imagen_completa = urljoin(url, imagen)
+        lista_imagenes.append(imagen_completa)
 
         # Sacar enlaces relativos y convertir a absolutos
         enlace_relativo = contenedor.find('a').get('href')
