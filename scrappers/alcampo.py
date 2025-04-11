@@ -63,7 +63,7 @@ def main():
             })
 
         # Escribir los productos en un archivo CSV
-        with open('productos.csv', mode='w', newline='', encoding='utf-8') as file:
+        with open('laTiendaEnCasa.csv', mode='w', newline='', encoding='utf-8') as file:
             fieldnames = ['ID','Producto', 'Precio', 'Imagen', 'URL']
             csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
             csv_writer.writeheader()

@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import csv
 
 url = 'https://dockerlabs.es/'
 
@@ -10,19 +11,33 @@ if respuesta.status_code == 200:
 
     maquinas = soup.find_all('div', onclick=True)
     conteo_maquinas = 1
-
-    autores = set()
+    lista_maquinas = []
 
     for maquina in maquinas:
         onclick_text = maquina['onclick']
         autor = onclick_text.split("'")[7]
-        autores.add(autor)
 
         nombre_maquina = onclick_text.split("'")[1]
         dificultad = onclick_text.split("'")[3]
         conteo_maquinas += 1
 
-        print(f"{nombre_maquina} -> {dificultad} -> {autor}")
+        lista_maquinas.append({
+            "Nombre": nombre_maquina,
+            "Dificultad": dificultad,
+            "Autor": autor
+        })
+
+    
+    # Escribir los productos en un archivo CSV
+    with open('scrappers/dockerlabs.csv', mode='w', newline='', encoding='utf-8') as file:
+        fieldnames = ['Nombre','Dificultad', 'Autor']
+        csv_writer = csv.DictWriter(file, fieldnames=fieldnames)
+        csv_writer.writeheader()
+
+        for maquina in lista_maquinas:
+            csv_writer.writerow(maquina)
+
+        print('Datos guardados en dockerlabs.csv')
     
     print(f"El numero de maquinas es {conteo_maquinas}")
 else:
