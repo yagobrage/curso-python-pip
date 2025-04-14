@@ -13,6 +13,8 @@ from selenium.webdriver.common.keys import Keys
 opts = Options()
 opts.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36")
 
+keyword = input("Introduce la keyword: ")#pedir bsuqueda
+
 driver = webdriver.Chrome(service=Service('/usr/bin/chromedriver'), options=opts)
 driver.get('https://www.worten.es')
 sleep(2)  # Reducimos un poco el tiempo de espera inicial
@@ -27,7 +29,6 @@ try:
 except:
     print("No se encontró el botón de cookies o no fue necesario aceptarlas.")
 
-keyword = "iphone"  # Cambiar para buscar
 
 def buscar(keyword):
     buscar = driver.find_element(By.CSS_SELECTOR, 'input#search')
