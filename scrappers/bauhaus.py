@@ -40,7 +40,7 @@ for keyword in keywords:
     total_productos = int(numeros[0])
     print(f'Productos encontrados: {total_productos}')
 
-    if total_productos < 720:
+    if total_productos < 108:
         print('Menos de 720 productos. No se scrapea esta keyword.')
         continue
 
@@ -48,7 +48,7 @@ for keyword in keywords:
     single_page = 20  # Comenzamos con la primera página (20 productos)
 
     # Primera recopilación de productos en la URL de búsqueda original
-    while len(productos) < 720:
+    while len(productos) < 108:
         if len(productos) == 0:
             url_full = url_busqueda  # Usamos la URL inicial solo en la primera iteración
         else:
@@ -101,6 +101,7 @@ for keyword in keywords:
             # Si no hubo un 'break' en los productos (es decir, todos son completos), continuamos con la siguiente página
             single_page += 1
             print(f'Página {single_page} cargada. Productos obtenidos hasta ahora: {len(productos)}')
+            print(f'productos ==== {productos}')
             continue
         
         # Si llegamos aquí, significa que hubo un break (producto incompleto)
