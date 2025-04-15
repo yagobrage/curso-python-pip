@@ -68,6 +68,10 @@ def scrapear():
         try:
             nombre = producto.find_element(By.XPATH, ".//*[@data-testid='product-card-title']").text
 
+            imagen = producto.find_element(By.XPATH, ".//*[@data-testid='product-card-primary-image']").get_attribute('src')
+
+            enlace = producto.find_element(By.XPATH, ".//*[@data-testid='product-card-description-link']").get_attribute('href')
+
             # Buscar el div con el data-testid='main-price' y extraer el precio visible
             try:
                 main_price_div = producto.find_element(By.XPATH, ".//*[@data-testid='main-price']")
@@ -105,7 +109,9 @@ def scrapear():
                 'nombre': nombre,
                 'precio': precio,
                 'ultimo_precio': ultimo_precio,
-                'precio_original': precio_original
+                'precio_original': precio_original,
+                'imagen': imagen,
+                'enlace': enlace
             }
 
             productos_scrapeados.append(producto_data)
@@ -115,9 +121,52 @@ def scrapear():
             print(f"Producto HTML: {producto.get_attribute('outerHTML')}")
 
 
+
+def wait_and_click_next():
+    try:
+        # Esperar hasta que haya al menos dos flechas de paginación visibles
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located(
+                (By.XPATH, ".//*[@data-testid='pagination-next-button']")
+            )
+        )
+
+        # Seleccionar específicamente la segunda flecha (la que apunta a la derecha →)
+        next_btn = driver.find_element(By.XPATH, ".//*[@data-testid='pagination-next-button']")
+
+        # Forzar scroll y clic
+        driver.execute_script("arguments[0].scrollIntoView(true);", next_btn)
+        sleep(0.8)
+        driver.execute_script("arguments[0].click();", next_btn)
+        sleep(3.5)
+
+        return True
+
+    except Exception as e:
+        print(f"Error pasando de página: {e}")
+        return False
+
+
 # Ejecutar búsqueda y scraping
 buscar(keyword)
-scrapear()
 
-# Mostrar resultados
-print(json.dumps(productos_scrapeados, indent=2, ensure_ascii=False))
+
+# Recorrer hasta 13 páginas
+for pagina in range(13):
+    print(f"Scrapeando página {pagina + 1}...")
+    
+    scrapear()
+    
+    if not wait_and_click_next():
+        break
+
+# Guardamos los resultados en un archivo JSON
+with open('adidas.json', 'w', encoding='utf-8') as f:
+    json.dump(productos_scrapeados, f, indent=2, ensure_ascii=False)
+
+
+# Cerrar el navegador
+driver.quit()
+
+# Imprimir el número de productos scrapeados
+print(f"Scraping completado. {len(productos_scrapeados)} productos guardados en 'adidas.json'.")
